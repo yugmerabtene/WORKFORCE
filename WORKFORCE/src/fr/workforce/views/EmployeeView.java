@@ -23,7 +23,9 @@ public class EmployeeView {
     private JTextField matriculeField;
     private JTextField firstNameField;
     private JTextField lastNameField;
-    private JTextField dateOfBirthField;
+    private JTextField dayOfBirthField;
+    private JTextField monthOfBirthField;
+    private JTextField yearOfBirthField;
     private JTextField hireYearField;
     private JTextField otherInfoField;
     private JButton addButton;
@@ -40,21 +42,25 @@ public class EmployeeView {
         matriculeField = new JTextField(10);
         firstNameField = new JTextField(10);
         lastNameField = new JTextField(10);
-        dateOfBirthField = new JTextField(10);
+        dayOfBirthField = new JTextField(2); // Champ pour le jour
+        monthOfBirthField = new JTextField(2); // Champ pour le mois
+        yearOfBirthField = new JTextField(4); // Champ pour l'année
         hireYearField = new JTextField(10);
         otherInfoField = new JTextField(10);
         addButton = new JButton("Ajouter");
 
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(7, 2));
+        inputPanel.setLayout(new GridLayout(8, 2));
         inputPanel.add(new JLabel("Matricule:"));
         inputPanel.add(matriculeField);
         inputPanel.add(new JLabel("Prénom:"));
         inputPanel.add(firstNameField);
         inputPanel.add(new JLabel("Nom:"));
         inputPanel.add(lastNameField);
-        inputPanel.add(new JLabel("Date de naissance:"));
-        inputPanel.add(dateOfBirthField);
+        inputPanel.add(new JLabel("Date de naissance (JJ-MM-AAAA):"));
+        inputPanel.add(dayOfBirthField);
+        inputPanel.add(monthOfBirthField);
+        inputPanel.add(yearOfBirthField);
         inputPanel.add(new JLabel("Année d'embauche:"));
         inputPanel.add(hireYearField);
         inputPanel.add(new JLabel("Autres informations:"));
@@ -70,24 +76,7 @@ public class EmployeeView {
         frame.setVisible(true);
     }
 
-    public void clearInputFields() {
-        matriculeField.setText("");
-        firstNameField.setText("");
-        lastNameField.setText("");
-        dateOfBirthField.setText("");
-        hireYearField.setText("");
-        otherInfoField.setText("");
-    }
-
-    public void setEmployeeList(List<Employee> employees) {
-        listModel.clear();
-        employees.forEach(listModel::addElement);
-    }
-
-    public void addAddButtonListener(ActionListener listener) {
-        addButton.addActionListener(listener);
-    }
-
+    // Méthodes pour obtenir les valeurs des champs de saisie
     public String getMatricule() {
         return matriculeField.getText();
     }
@@ -101,18 +90,68 @@ public class EmployeeView {
     }
 
     public String getDateOfBirth() {
-        return dateOfBirthField.getText();
+        String day = dayOfBirthField.getText();
+        String month = monthOfBirthField.getText();
+        String year = yearOfBirthField.getText();
+
+        // Valider que les champs sont remplis
+        if (!day.isEmpty() && !month.isEmpty() && !year.isEmpty()) {
+            // Valider que les valeurs sont des entiers
+            try {
+                int dayInt = Integer.parseInt(day);
+                int monthInt = Integer.parseInt(month);
+                int yearInt = Integer.parseInt(year);
+
+                // Valider que les valeurs sont dans des plages raisonnables
+                if (yearInt >= 1900 && yearInt <= 2100 &&
+                    monthInt >= 1 && monthInt <= 12 &&
+                    dayInt >= 1 && dayInt <= 31) {
+
+                    // Formater la date au format AAAA-MM-JJ
+                    String formattedDate = String.format("%04d-%02d-%02d", yearInt, monthInt, dayInt);
+                    return formattedDate;
+                } else {
+                    // Gérer le cas où les valeurs sont hors de portée
+                    return null;
+                }
+            } catch (NumberFormatException e) {
+                // Gérer le cas où les valeurs ne sont pas des entiers valides
+                return null;
+            }
+        } else {
+            return null; // Retourner null si un champ est vide
+        }
     }
 
     public int getHireYear() {
         try {
             return Integer.parseInt(hireYearField.getText());
         } catch (NumberFormatException e) {
-            return 0; // Retourne 0 en cas d'erreur de conversion
+            return 0; // Retourner 0 si la valeur n'est pas un entier valide
         }
     }
 
     public String getOtherInfo() {
         return otherInfoField.getText();
+    }
+
+    public void clearInputFields() {
+        matriculeField.setText("");
+        firstNameField.setText("");
+        lastNameField.setText("");
+        dayOfBirthField.setText("");
+        monthOfBirthField.setText("");
+        yearOfBirthField.setText("");
+        hireYearField.setText("");
+        otherInfoField.setText("");
+    }
+
+    public void setEmployeeList(List<Employee> employees) {
+        listModel.clear();
+        employees.forEach(listModel::addElement);
+    }
+
+    public void addAddButtonListener(ActionListener listener) {
+        addButton.addActionListener(listener);
     }
 }
