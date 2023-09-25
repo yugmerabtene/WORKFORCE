@@ -1,22 +1,38 @@
 package fr.workforce.app;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 import fr.workforce.controllers.EmployeeController;
-import fr.workforce.models.Employee;
+import fr.workforce.database.EmployeeDatabase;
+import fr.workforce.repositories.EmployeeRepository;
+import fr.workforce.repositories.EmployeeRepositoryImpl;
 import fr.workforce.services.EmployeeService;
+import fr.workforce.services.EmployeeServiceImpl;
+import fr.workforce.views.EmployeeView;
 
 public class Main {
-
     public static void main(String[] args) {
-        // Initialisez vos services et contrôleurs ici
-        EmployeeService employeeService = new EmployeeService();
-        EmployeeController employeeController = new EmployeeController(employeeService);
+        // Créez la base de données si elle n'existe pas
+        EmployeeDatabase.checkDatabase();
 
-        // Utilisez les méthodes du contrôleur pour gérer les employés
-        employeeController.listEmployees();
+        // Établissez une connexion à la base de données
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/workforce", "root", "");
 
-        // Créez un nouvel employé
-        Employee newEmployee = new Employee(3, "Alice", "Johnson");
-        employeeController.createEmployee(newEmployee);
+            // Créez l'instance du repository et du service
+            EmployeeRepository repository = new EmployeeRepositoryImpl(connection);
+            EmployeeService service = new EmployeeServiceImpl(repository);
+
+            // Créez la vue et le contrôleur
+            EmployeeView view = new EmployeeView();
+            EmployeeController controller = new EmployeeController(view, service);
+
+            // Affichez la vue principale de l'application
+            view.show();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
-

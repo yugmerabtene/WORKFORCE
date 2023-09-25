@@ -1,10 +1,10 @@
-package fr.workforce.services;
-
-import java.util.List;
+package fr.workforce.repositories;
 
 import fr.workforce.models.Employee;
 
-public interface EmployeeService {
+import java.util.List;
+
+public interface EmployeeRepository {
 
     void createEmployee(Employee employee);
 
