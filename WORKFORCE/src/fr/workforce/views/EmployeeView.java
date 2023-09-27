@@ -18,7 +18,7 @@ public class EmployeeView {
     private JTextField monthOfBirthField;
     private JTextField yearOfBirthField;
     private JTextField hireYearField;
-    private JTextField otherInfoField;
+    private JTextArea otherInfoArea; // Utilisation de JTextArea pour les autres informations
     private JButton addButton;
 
     public EmployeeView() {
@@ -40,7 +40,7 @@ public class EmployeeView {
         monthOfBirthField = new JTextField(2);
         yearOfBirthField = new JTextField(4);
         hireYearField = new JTextField(10);
-        otherInfoField = new JTextField(10);
+        otherInfoArea = new JTextArea(4, 20); // Utilisation de JTextArea pour les autres informations
         addButton = new JButton("Ajouter");
 
         // Crée un JPanel pour les champs de la date de naissance avec un titre
@@ -54,7 +54,7 @@ public class EmployeeView {
 
         // Crée un JPanel pour organiser les composants d'entrée
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(9, 2)); // Augmente le nombre de lignes pour l'ajout de la date de naissance
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS)); // Utilisation de BoxLayout pour aligner les champs de haut en bas
         inputPanel.add(new JLabel("Matricule :"));
         inputPanel.add(matriculeField);
         inputPanel.add(new JLabel("Prénom :"));
@@ -65,14 +65,21 @@ public class EmployeeView {
         inputPanel.add(new JLabel("Année d'embauche :"));
         inputPanel.add(hireYearField);
         inputPanel.add(new JLabel("Autres informations :"));
-        inputPanel.add(otherInfoField);
-        inputPanel.add(new JLabel()); // Ajoute un espace vide pour la mise en page
+        inputPanel.add(new JScrollPane(otherInfoArea)); // Utilisation de JScrollPane pour les autres informations
         inputPanel.add(addButton);
 
         // Configure la mise en page de la fenêtre
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add(listScrollPane, BorderLayout.CENTER);
-        frame.getContentPane().add(inputPanel, BorderLayout.SOUTH);
+        frame.getContentPane().add(inputPanel, BorderLayout.WEST); // Déplace le panel d'entrée à gauche
+
+        // Ajoute un style Windows 10
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            SwingUtilities.updateComponentTreeUI(frame);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Affiche la fenêtre
@@ -139,7 +146,7 @@ public class EmployeeView {
     }
 
     public String getOtherInfo() {
-        return otherInfoField.getText();
+        return otherInfoArea.getText();
     }
 
     public void clearInputFields() {
@@ -150,7 +157,7 @@ public class EmployeeView {
         monthOfBirthField.setText("");
         yearOfBirthField.setText("");
         hireYearField.setText("");
-        otherInfoField.setText("");
+        otherInfoArea.setText("");
     }
 
     public void setEmployeeList(List<Employee> employees) {
