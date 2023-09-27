@@ -12,7 +12,8 @@ public class EmployeeController {
     private EmployeeService service;
 
     public EmployeeController(EmployeeView view, EmployeeService service) {
-        this.view = view;
+        
+    	this.view = view;
         this.service = service;
 
         view.addAddButtonListener(new ActionListener() {

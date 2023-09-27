@@ -1,18 +1,9 @@
 package fr.workforce.views;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 
 import fr.workforce.models.Employee;
 
@@ -31,52 +22,68 @@ public class EmployeeView {
     private JButton addButton;
 
     public EmployeeView() {
+        // Crée la fenêtre principale
         frame = new JFrame("Gestion des Employés");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 400);
+        frame.setSize(800, 600); // Définit la taille de la fenêtre
 
+        // Crée un modèle de liste et une liste pour afficher les employés
         listModel = new DefaultListModel<>();
         employeeList = new JList<>(listModel);
         JScrollPane listScrollPane = new JScrollPane(employeeList);
 
+        // Crée les champs de texte et le bouton Ajouter
         matriculeField = new JTextField(10);
         firstNameField = new JTextField(10);
         lastNameField = new JTextField(10);
-        dayOfBirthField = new JTextField(2); // Champ pour le jour
-        monthOfBirthField = new JTextField(2); // Champ pour le mois
-        yearOfBirthField = new JTextField(4); // Champ pour l'année
+        dayOfBirthField = new JTextField(2);
+        monthOfBirthField = new JTextField(2);
+        yearOfBirthField = new JTextField(4);
         hireYearField = new JTextField(10);
         otherInfoField = new JTextField(10);
         addButton = new JButton("Ajouter");
 
+        // Crée un JPanel pour les champs de la date de naissance avec un titre
+        JPanel dateOfBirthPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        dateOfBirthPanel.add(new JLabel("Date de naissance (JJ - MM - AAAA) : "));
+        dateOfBirthPanel.add(dayOfBirthField);
+        dateOfBirthPanel.add(new JLabel(" - "));
+        dateOfBirthPanel.add(monthOfBirthField);
+        dateOfBirthPanel.add(new JLabel(" - "));
+        dateOfBirthPanel.add(yearOfBirthField);
+
+        // Crée un JPanel pour organiser les composants d'entrée
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(8, 2));
-        inputPanel.add(new JLabel("Matricule:"));
+        inputPanel.setLayout(new GridLayout(9, 2)); // Augmente le nombre de lignes pour l'ajout de la date de naissance
+        inputPanel.add(new JLabel("Matricule :"));
         inputPanel.add(matriculeField);
-        inputPanel.add(new JLabel("Prénom:"));
+        inputPanel.add(new JLabel("Prénom :"));
         inputPanel.add(firstNameField);
-        inputPanel.add(new JLabel("Nom:"));
+        inputPanel.add(new JLabel("Nom :"));
         inputPanel.add(lastNameField);
-        inputPanel.add(new JLabel("Date de naissance (JJ-MM-AAAA):"));
-        inputPanel.add(dayOfBirthField);
-        inputPanel.add(monthOfBirthField);
-        inputPanel.add(yearOfBirthField);
-        inputPanel.add(new JLabel("Année d'embauche:"));
+        inputPanel.add(dateOfBirthPanel); // Ajoute le JPanel de la date de naissance
+        inputPanel.add(new JLabel("Année d'embauche :"));
         inputPanel.add(hireYearField);
-        inputPanel.add(new JLabel("Autres informations:"));
+        inputPanel.add(new JLabel("Autres informations :"));
         inputPanel.add(otherInfoField);
+        inputPanel.add(new JLabel()); // Ajoute un espace vide pour la mise en page
         inputPanel.add(addButton);
 
+        // Configure la mise en page de la fenêtre
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add(listScrollPane, BorderLayout.CENTER);
         frame.getContentPane().add(inputPanel, BorderLayout.SOUTH);
     }
 
+    // Affiche la fenêtre
     public void show() {
         frame.setVisible(true);
     }
 
-    // Méthodes pour obtenir les valeurs des champs de saisie
+    // Reste des méthodes inchangées
+    // ...
+
+    // Méthode pour obtenir les valeurs des champs de saisie
     public String getMatricule() {
         return matriculeField.getText();
     }
@@ -94,32 +101,32 @@ public class EmployeeView {
         String month = monthOfBirthField.getText();
         String year = yearOfBirthField.getText();
 
-        // Valider que les champs sont remplis
+        // Valide que les champs sont remplis
         if (!day.isEmpty() && !month.isEmpty() && !year.isEmpty()) {
-            // Valider que les valeurs sont des entiers
+            // Valide que les valeurs sont des entiers
             try {
                 int dayInt = Integer.parseInt(day);
                 int monthInt = Integer.parseInt(month);
                 int yearInt = Integer.parseInt(year);
 
-                // Valider que les valeurs sont dans des plages raisonnables
+                // Valide que les valeurs sont dans des plages raisonnables
                 if (yearInt >= 1900 && yearInt <= 2100 &&
-                    monthInt >= 1 && monthInt <= 12 &&
-                    dayInt >= 1 && dayInt <= 31) {
+                        monthInt >= 1 && monthInt <= 12 &&
+                        dayInt >= 1 && dayInt <= 31) {
 
-                    // Formater la date au format AAAA-MM-JJ
+                    // Formate la date au format AAAA-MM-JJ
                     String formattedDate = String.format("%04d-%02d-%02d", yearInt, monthInt, dayInt);
                     return formattedDate;
                 } else {
-                    // Gérer le cas où les valeurs sont hors de portée
+                    // Gère le cas où les valeurs sont hors de portée
                     return null;
                 }
             } catch (NumberFormatException e) {
-                // Gérer le cas où les valeurs ne sont pas des entiers valides
+                // Gère le cas où les valeurs ne sont pas des entiers valides
                 return null;
             }
         } else {
-            return null; // Retourner null si un champ est vide
+            return null; // Retourne null si un champ est vide
         }
     }
 
@@ -127,7 +134,7 @@ public class EmployeeView {
         try {
             return Integer.parseInt(hireYearField.getText());
         } catch (NumberFormatException e) {
-            return 0; // Retourner 0 si la valeur n'est pas un entier valide
+            return 0; // Retourne 0 si la valeur n'est pas un entier valide
         }
     }
 
