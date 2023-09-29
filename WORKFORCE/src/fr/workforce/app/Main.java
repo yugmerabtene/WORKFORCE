@@ -17,7 +17,7 @@ public class Main {
         // Créez la base de données si elle n'existe pas
         EmployeeDatabase.checkDatabase();
 
-        // Établissez une connexion à la base de données
+        // Établissez une connexion à la base de  données
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/workforce", "root", "");
 
