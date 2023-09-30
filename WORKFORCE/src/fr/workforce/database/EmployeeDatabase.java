@@ -1,4 +1,4 @@
-// Étape 1: Création de la base de données
+// Ã‰tape 1: CrÃ©ation de la base de donnÃ©es
 package fr.workforce.database;
 
 import java.sql.Connection;
@@ -8,23 +8,23 @@ import java.sql.Statement;
 
 public class EmployeeDatabase {
 
-    // Méthode pour vérifier l'existence de la base de données
+    // MÃ©thode pour vÃ©rifier l'existence de la base de donnÃ©es
     public static void checkDatabase() {
         Connection connection = null;
         Statement statement = null;
 
         try {
-            // Charger le pilote JDBC MySQL (assurez-vous d'ajouter la bibliothèque MySQL JDBC à votre projet)
+            // Charger le pilote JDBC MySQL 
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            // Établir une connexion à la base de données MySQL
-            String url = "jdbc:mysql://localhost:3306/workforce"; // Remplacez "votre_base_de_donnees" par le nom de votre base de données
-            String user = "root"; // Remplacez "votre_utilisateur" par le nom d'utilisateur de MySQL
-            String password = ""; // Remplacez "votre_mot_de_passe" par le mot de passe de MySQL
+            // Ã‰tablir une connexion Ã  la base de donnÃ©es MySQL
+            String url = "jdbc:mysql://localhost:3306/workforce"; // Remplacez "votre_base_de_donnees" par le nom de votre base de donnÃ©es
+            String user = "root"; //  nom d'utilisateur de MySQL
+            String password = ""; // mot de passe de MySQL
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
 
-            // Vérifier si la table "employees" existe déjà
+            // VÃ©rifier si la table "employees" existe dÃ©jÃ 
             String checkTableSQL = "SELECT 1 FROM employees LIMIT 1";
             statement.executeQuery(checkTableSQL);
 
